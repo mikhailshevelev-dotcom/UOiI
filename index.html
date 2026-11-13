@@ -82,13 +82,13 @@ var D={
   ['Таблица Банки 3.0','https://docs.google.com/spreadsheets/d/1BIwMWMBAB7LR9MbR5qGrIXYbq_LdFshCPz1Q_l-Mqcs/edit?gid=1749938485'],
   ['Проверка КИ','https://strana-development.github.io/credit_history/'],
   ['Документы для подачи на ипотеку','https://strana-development.github.io/Pamyatka-ipoteka/'],
-  ['Структура отдела',null]]},
+  ['Структура отдела','#structure-mortgage']]},
  registration:{title:'Отдел оформления',parent:null,items:[
   ['Памятка по документам','https://strana-development.github.io/Pamyatka/'],
   ['Регламенты','#regulations','Отдельный раздел'],
   ['Учет оформления','#accounting','Отдельный раздел'],
   ['График отдела оформления','https://mikhailshevelev-dotcom.github.io/grafik/'],
-  ['Структура отдела',null],
+  ['Структура отдела','#structure-registration'],
   ['Вопрос-ответ по ДДУ/ДКП','https://mikhailshevelev-dotcom.github.io/vopros-otvet/']]},
  links:{title:'Полезные ссылки',parent:null,items:[
   ['Заказ справок','https://docs.google.com/spreadsheets/d/1xrbBarrAbEVRuFYjcXYfHgsAPSqUVI2VMcxV7rdGEPE/edit?gid=0'],
@@ -114,11 +114,16 @@ function kind(u){
 }
 function card(it){
   var u=it[1],k=kind(u);
+  if(u=='#structure-mortgage'||u=='#structure-registration')k='Структура отдела';
   if(!u)return '<div class="card off"><b>'+it[0]+'</b><small>'+k+'</small></div>';
   var ext=u.charAt(0)!='#';
   return '<a class="card" href="'+u+'"'+(ext?' target="_blank" rel="noopener noreferrer"':'')+'><b>'+it[0]+'</b><small>'+k+'</small></a>';
 }
 function plural(n){var m=n%10,h=n%100;return n+(m==1&&h!=11?' материал':(m>1&&m<5&&(h<10||h>20)?' материала':' материалов'))}
+function structurePage(id){
+  var parent=id=='structure-mortgage'?'mortgage':'registration';
+  return '<p class="crumbs"><a href="#'+parent+'">← Назад</a></p><h1>Структура отдела</h1><div class="rule"></div><div style="height:calc(100vh - 250px);min-height:520px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden"><iframe title="Структура отдела" src="https://github.com/mikhailshevelev-dotcom/struktura-otdela" style="width:100%;height:100%;border:0" loading="lazy"></iframe></div><p class="crumbs" style="margin-top:16px"><a href="#'+parent+'">← Назад к разделу</a></p>';
+}
 function page(id){
   var d=D[id];
   var crumbs=d.parent?'<p class="crumbs"><a href="#'+d.parent+'">'+D[d.parent].title+'</a> / '+d.title+'</p>':'<p class="crumbs"><a href="#home">Главная</a> / '+d.title+'</p>';
@@ -132,9 +137,9 @@ function home(){
 }
 function route(){
   var id=(location.hash||'#home').slice(1);
-  if(id!='home'&&!D[id])id='home';
-  document.getElementById('app').innerHTML=id=='home'?home():page(id);
-  var top=D[id]&&D[id].parent?D[id].parent:id;
+  if(id!='home'&&!D[id]&&id!='structure-mortgage'&&id!='structure-registration')id='home';
+  document.getElementById('app').innerHTML=id=='home'?home():(id.indexOf('structure-')===0?structurePage(id):page(id));
+  var top=D[id]&&D[id].parent?D[id].parent:(id.indexOf('structure-')===0?id.replace('structure-',''):id);
   document.getElementById('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'"'+(n[0]==top?' aria-current="page"':'')+'>'+n[1]+'</a>'}).join('');
   document.title=(id=='home'?'':D[id].title+' — ')+'База знаний УОиИ';
   window.scrollTo(0,0);
