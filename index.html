@@ -61,6 +61,12 @@ a.card:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(41,48,62,.12)
 .card.off{border-left-color:var(--line);background:transparent;border-style:dashed}
 .card.off b{color:var(--muted)}
 .sec{margin-top:8px}
+.fbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.fbar b{font-size:20px;flex:1;min-width:140px}
+.back{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:12px;background:var(--tile);color:#fff;font-weight:600;font-size:15px}
+.back:hover{filter:brightness(1.15)}
+.ext{font-size:14px;font-weight:600;color:var(--accent)}
+.frame{display:block;width:100%;height:calc(100vh - 210px);height:calc(100dvh - 210px);min-height:480px;border:1px solid var(--line);border-radius:14px;background:#fff}
 footer{max-width:1040px;margin:0 auto;padding:0 20px 36px;color:var(--muted);font-size:13px}
 @media (max-width:640px){.bar{flex-direction:column;align-items:flex-start;gap:8px}.bar nav{margin-left:-12px}main{padding-top:26px}}
 </style>
@@ -88,12 +94,13 @@ var D={
   ['Регламенты','#regulations','Отдельный раздел'],
   ['Учет оформления','#accounting','Отдельный раздел'],
   ['График отдела оформления','https://mikhailshevelev-dotcom.github.io/grafik/'],
-  ['Структура отдела',null],
+  ['Структура отдела','#structure','Открывается внутри базы знаний'],
   ['Вопрос-ответ по ДДУ/ДКП','https://mikhailshevelev-dotcom.github.io/vopros-otvet/']]},
  links:{title:'Полезные ссылки',parent:null,items:[
   ['Заказ справок','https://docs.google.com/spreadsheets/d/1xrbBarrAbEVRuFYjcXYfHgsAPSqUVI2VMcxV7rdGEPE/edit?gid=0'],
   ['Список УК','https://docs.google.com/spreadsheets/d/15ZzxWriD-l2V06Cs-KMveKuLGVDXs1WQI8yL9v28FOA/edit?gid=0'],
   ['Регламент скидок','https://docs.google.com/spreadsheets/d/1sIW5P9u1WG-k0qkr_V-DyNfEPC388e7Kuqex1dnRGBE/edit?gid=1656956659']]},
+ structure:{title:'Структура отдела',parent:'registration',url:'https://mikhailshevelev-dotcom.github.io/struktura-otdela/',items:[]},
  regulations:{title:'Регламенты',parent:'registration',items:[
   ['Возврат на бронь','https://teamly.itstrana.site/at/0b5dd42c-34ba-4c8d-9324-b29d1e7ee7c0'],
   ['Возврат на доработку','https://teamly.itstrana.site/at/82ce8c3a-9813-4d8a-8a93-ff77f6f1bee1'],
@@ -106,6 +113,7 @@ var D={
 var NAV=[['home','Главная'],['mortgage','Отдел ипотеки'],['registration','Отдел оформления'],['links','Полезные ссылки']];
 function kind(u){
   if(!u)return 'Раздел скоро появится';
+  if(u=='#structure')return 'Открывается внутри базы знаний';
   if(u.charAt(0)=='#')return 'Отдельный раздел';
   if(u.indexOf('docs.google.com/spreadsheets')>-1)return 'Google Таблица';
   if(u.indexOf('docs.google.com/presentation')>-1)return 'Google Презентация';
@@ -121,6 +129,7 @@ function card(it){
 function plural(n){var m=n%10,h=n%100;return n+(m==1&&h!=11?' материал':(m>1&&m<5&&(h<10||h>20)?' материала':' материалов'))}
 function page(id){
   var d=D[id];
+  if(d.url)return '<div class="fbar"><a class="back" href="#'+d.parent+'">← Назад</a><b>'+d.title+'</b><a class="ext" href="'+d.url+'" target="_blank" rel="noopener noreferrer">Открыть в новой вкладке</a></div><iframe class="frame" title="'+d.title+'" src="'+d.url+'"></iframe>';
   var crumbs=d.parent?'<p class="crumbs"><a href="#'+d.parent+'">'+D[d.parent].title+'</a> / '+d.title+'</p>':'<p class="crumbs"><a href="#home">Главная</a> / '+d.title+'</p>';
   return crumbs+'<h1>'+d.title+'</h1><div class="rule"></div><div class="grid">'+d.items.map(card).join('')+'</div>';
 }
