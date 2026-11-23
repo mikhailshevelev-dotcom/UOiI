@@ -30,14 +30,18 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--text);font-family:"Montserrat","Segoe UI",Arial,sans-serif;line-height:1.5;-webkit-text-size-adjust:100%}
 a{color:inherit;text-decoration:none}
 a:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:12px}
-header{background:#fff;border-bottom:1px solid #E5E7EE;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
 .bar{max-width:1040px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{display:block;height:26px;width:auto}
+.logo{display:block;height:26px;width:auto;background:#fff;border-radius:8px;padding:5px 10px;box-sizing:content-box}
 .bar nav{display:flex;gap:6px;flex-wrap:wrap}
-.bar nav a{font-size:14px;font-weight:600;color:#29303E;padding:8px 12px;border-radius:10px}
-.bar nav a:hover{background:#F1E6EF;color:#951B81}
-.bar nav a[aria-current="page"]{color:#951B81;background:#F6EAF4}
+.bar nav a{font-size:14px;font-weight:600;color:var(--text);padding:8px 12px;border-radius:10px}
+.bar nav a:hover{background:rgba(149,27,129,.12);color:var(--accent)}
+.bar nav a[aria-current="page"]{color:var(--accent);background:rgba(149,27,129,.14)}
 .embedded .logolink{display:none}
+.sw{display:flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--bg)}
+.sw button{font:inherit;font-size:13px;font-weight:600;min-height:36px;padding:0 14px;border:0;border-radius:999px;background:none;color:var(--muted);cursor:pointer}
+.sw button[aria-pressed="true"]{background:var(--grad);color:#fff}
+.sw button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .stripe{height:4px;background:var(--grad)}
 main{max-width:1040px;margin:0 auto;padding:36px 20px 64px}
 .view{display:none}.view.on{display:block}
@@ -67,7 +71,12 @@ a.card:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(41,48,62,.12)
 .back{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:12px;background:var(--tile);color:#fff;font-weight:600;font-size:15px}
 .back:hover{filter:brightness(1.15)}
 .ext{font-size:14px;font-weight:600;color:var(--accent)}
-.frame{display:block;width:100%;height:calc(100vh - 210px);height:calc(100dvh - 210px);min-height:480px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.frame{display:block;width:100%;height:calc(100vh - 150px);height:calc(100dvh - 150px);min-height:480px;border:0;border-radius:0;background:var(--bg)}
+.embedded main{max-width:none;padding:0}
+.embedded footer{display:none}
+.embedded .stripe{display:none}
+.embedded header{border-bottom:0}
+.embedded .fbar{max-width:1040px;margin:0 auto;padding:10px 20px}
 footer{max-width:1040px;margin:0 auto;padding:0 20px 36px;color:var(--muted);font-size:13px}
 @media (max-width:640px){.bar{flex-direction:column;align-items:flex-start;gap:8px}.bar nav{margin-left:-12px}main{padding-top:26px}}
 </style>
@@ -77,6 +86,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 20px 36px;color:var(--muted);fon
   <div class="bar">
     <a class="logolink" href="#home" aria-label="На главную"><img class="logo" alt="Страна" src="data:image/png;base64,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"></a>
     <nav id="nav" aria-label="Разделы"></nav>
+    <div class="sw" role="group" aria-label="Цветовая схема"><button type="button" data-t="light" aria-pressed="false">Светлая</button><button type="button" data-t="dark" aria-pressed="false">Графит</button></div>
   </div>
   <div class="stripe"></div>
 </header>
@@ -94,14 +104,18 @@ var D={
   ['Памятка по документам','https://strana-development.github.io/Pamyatka/'],
   ['Регламенты','#regulations','Отдельный раздел'],
   ['Учет оформления','#accounting','Отдельный раздел'],
-  ['График отдела оформления','https://mikhailshevelev-dotcom.github.io/grafik/'],
+  ['График дежурных отдела оформления','https://mikhailshevelev-dotcom.github.io/grafik/'],
   ['Структура отдела','#structure','Открывается внутри базы знаний'],
-  ['Вопрос-ответ по ДДУ/ДКП','https://mikhailshevelev-dotcom.github.io/vopros-otvet/']]},
+  ['Вопрос-ответ по ДДУ/ДКП','https://mikhailshevelev-dotcom.github.io/vopros-otvet/'],
+  ['Переход на ипотеку','#perehod'],
+  ['Часто задаваемые вопросы / нестандартные ситуации',null],
+  ['Новостной канал Отдела оформления','https://max.ru/join/3jGgCdFOHkjkxtubKZtEoYVFglgyCVurE8PccD-ha5s']]},
  links:{title:'Полезные ссылки',parent:null,items:[
   ['Заказ справок','https://docs.google.com/spreadsheets/d/1xrbBarrAbEVRuFYjcXYfHgsAPSqUVI2VMcxV7rdGEPE/edit?gid=0'],
   ['Список УК','https://docs.google.com/spreadsheets/d/15ZzxWriD-l2V06Cs-KMveKuLGVDXs1WQI8yL9v28FOA/edit?gid=0'],
   ['Регламент скидок','https://docs.google.com/spreadsheets/d/1sIW5P9u1WG-k0qkr_V-DyNfEPC388e7Kuqex1dnRGBE/edit?gid=1656956659']]},
  structure:{title:'Структура отдела',parent:'registration',url:'https://mikhailshevelev-dotcom.github.io/struktura-otdela/',items:[]},
+ perehod:{title:'Переход на ипотеку',parent:'registration',url:'https://mikhailshevelev-dotcom.github.io/Perehod-na-ipoteku/',items:[]},
  regulations:{title:'Регламенты',parent:'registration',items:[
   ['Возврат на бронь','https://teamly.itstrana.site/at/0b5dd42c-34ba-4c8d-9324-b29d1e7ee7c0'],
   ['Возврат на доработку','https://teamly.itstrana.site/at/82ce8c3a-9813-4d8a-8a93-ff77f6f1bee1'],
@@ -114,8 +128,9 @@ var D={
 var NAV=[['home','Главная'],['mortgage','Отдел ипотеки'],['registration','Отдел оформления'],['links','Полезные ссылки']];
 function kind(u){
   if(!u)return 'Раздел скоро появится';
-  if(u=='#structure')return 'Открывается внутри базы знаний';
+  if(u=='#structure'||u=='#perehod')return 'Открывается внутри базы знаний';
   if(u.charAt(0)=='#')return 'Отдельный раздел';
+  if(u.indexOf('max.ru')>-1)return 'Канал в MAX';
   if(u.indexOf('docs.google.com/spreadsheets')>-1)return 'Google Таблица';
   if(u.indexOf('docs.google.com/presentation')>-1)return 'Google Презентация';
   if(u.indexOf('teamly')>-1)return 'Регламент в Teamly';
@@ -130,7 +145,7 @@ function card(it){
 function plural(n){var m=n%10,h=n%100;return n+(m==1&&h!=11?' материал':(m>1&&m<5&&(h<10||h>20)?' материала':' материалов'))}
 function page(id){
   var d=D[id];
-  if(d.url)return '<div class="fbar"><a class="back" href="#'+d.parent+'">← Назад</a><b>'+d.title+'</b><a class="ext" href="'+d.url+'" target="_blank" rel="noopener noreferrer">Открыть в новой вкладке</a></div><iframe class="frame" title="'+d.title+'" src="'+d.url+'"></iframe>';
+  if(d.url)return '<div class="fbar"><a class="back" href="#'+d.parent+'">← Назад</a><span style="flex:1"></span><a class="ext" href="'+d.url+'" target="_blank" rel="noopener noreferrer">Открыть в новой вкладке</a></div><iframe class="frame" title="'+d.title+'" src="'+d.url+'"></iframe>';
   var crumbs=d.parent?'<p class="crumbs"><a href="#'+d.parent+'">'+D[d.parent].title+'</a> / '+d.title+'</p>':'<p class="crumbs"><a href="#home">Главная</a> / '+d.title+'</p>';
   return '<div class="fbar"><a class="back" href="#'+(d.parent||'home')+'">← Назад</a></div>'+crumbs+'<h1>'+d.title+'</h1><div class="rule"></div><div class="grid">'+d.items.map(card).join('')+'</div>';
 }
@@ -146,10 +161,15 @@ function route(){
   document.getElementById('app').innerHTML=id=='home'?home():page(id);
   var top=D[id]&&D[id].parent?D[id].parent:id;
   document.getElementById('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'"'+(n[0]==top?' aria-current="page"':'')+'>'+n[1]+'</a>'}).join('');
-  document.body.classList.toggle('embedded',id=='structure');
+  document.body.classList.toggle('embedded',!!(D[id]&&D[id].url));
   document.title=(id=='home'?'':D[id].title+' — ')+'База знаний УОиИ';
   window.scrollTo(0,0);
 }
+function theme(t,save){document.documentElement.setAttribute('data-theme',t);var b=document.querySelectorAll('.sw button');for(var i=0;i<b.length;i++)b[i].setAttribute('aria-pressed',b[i].getAttribute('data-t')==t?'true':'false');if(save){try{localStorage.setItem('kb-theme',t)}catch(e){}}}
+var st=null;try{st=localStorage.getItem('kb-theme')}catch(e){}
+if(st!='light'&&st!='dark')st=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+var sb=document.querySelectorAll('.sw button');for(var j=0;j<sb.length;j++){(function(el){el.addEventListener('click',function(){theme(el.getAttribute('data-t'),true)})})(sb[j])}
+theme(st,false);
 window.addEventListener('hashchange',route);route();
 </script>
 </body>
