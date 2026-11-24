@@ -74,6 +74,8 @@ a.card:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(41,48,62,.12)
 .frame{display:block;width:100%;height:calc(100vh - 150px);height:calc(100dvh - 150px);min-height:480px;border:0;border-radius:0;background:var(--bg)}
 .embedded main{max-width:none;padding:0}
 .embedded footer{display:none}
+.clean header,.clean .ext{display:none}
+.clean .frame{height:calc(100vh - 64px);height:calc(100dvh - 64px)}
 .embedded .stripe{display:none}
 .embedded header{border-bottom:0}
 .embedded .fbar{max-width:1040px;margin:0 auto;padding:10px 20px}
@@ -94,7 +96,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 20px 36px;color:var(--muted);fon
 <footer>База знаний Управления Оформления и Ипотеки. Для отделов продаж.</footer>
 <script>
 var D={
- mortgage:{title:'Отдел ипотеки',parent:null,items:[
+ mortgage:{title:'Отдел ипотеки',parent:null,clean:true,url:'https://strana-ipoteka.github.io/mortgage-knowledge-base/#home',items:[
   ['Памятка Банки 3.0','https://mikhailshevelev-dotcom.github.io/strana-bank-memo/'],
   ['Таблица Банки 3.0','https://docs.google.com/spreadsheets/d/1BIwMWMBAB7LR9MbR5qGrIXYbq_LdFshCPz1Q_l-Mqcs/edit?gid=1749938485'],
   ['Проверка КИ','https://strana-development.github.io/credit_history/'],
@@ -145,14 +147,14 @@ function card(it){
 function plural(n){var m=n%10,h=n%100;return n+(m==1&&h!=11?' материал':(m>1&&m<5&&(h<10||h>20)?' материала':' материалов'))}
 function page(id){
   var d=D[id];
-  if(d.url)return '<div class="fbar"><a class="back" href="#'+d.parent+'">← Назад</a><span style="flex:1"></span><a class="ext" href="'+d.url+'" target="_blank" rel="noopener noreferrer">Открыть в новой вкладке</a></div><iframe class="frame" title="'+d.title+'" src="'+d.url+'"></iframe>';
+  if(d.url)return '<div class="fbar"><a class="back" href="#'+(d.parent||'home')+'">← Назад</a><span style="flex:1"></span><a class="ext" href="'+d.url+'" target="_blank" rel="noopener noreferrer">Открыть в новой вкладке</a></div><iframe class="frame" title="'+d.title+'" src="'+d.url+'"></iframe>';
   var crumbs=d.parent?'<p class="crumbs"><a href="#'+d.parent+'">'+D[d.parent].title+'</a> / '+d.title+'</p>':'<p class="crumbs"><a href="#home">Главная</a> / '+d.title+'</p>';
   return '<div class="fbar"><a class="back" href="#'+(d.parent||'home')+'">← Назад</a></div>'+crumbs+'<h1>'+d.title+'</h1><div class="rule"></div><div class="grid">'+d.items.map(card).join('')+'</div>';
 }
 function home(){
   return '<h1>База знаний Управления Оформления и Ипотеки</h1><p class="lead">Для отделов продаж.</p><div class="rule"></div>'+
   '<div class="tiles">'+
-  ['mortgage','registration'].map(function(k){var d=D[k];return '<a class="tile" href="#'+k+'"><div><h2>'+d.title+'</h2><p>'+plural(d.items.length)+'</p></div><span class="go">Открыть раздел</span></a>'}).join('')+
+  ['mortgage','registration'].map(function(k){var d=D[k];return '<a class="tile" href="#'+k+'"><div><h2>'+d.title+'</h2><p>'+(d.url?'База знаний отдела ипотеки':plural(d.items.length))+'</p></div><span class="go">Открыть раздел</span></a>'}).join('')+
   '</div><div class="sec"><h3>Полезные ссылки</h3><div class="grid">'+D.links.items.map(card).join('')+'</div></div>';
 }
 function route(){
@@ -162,6 +164,7 @@ function route(){
   var top=D[id]&&D[id].parent?D[id].parent:id;
   document.getElementById('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'"'+(n[0]==top?' aria-current="page"':'')+'>'+n[1]+'</a>'}).join('');
   document.body.classList.toggle('embedded',!!(D[id]&&D[id].url));
+  document.body.classList.toggle('clean',!!(D[id]&&D[id].clean));
   document.title=(id=='home'?'':D[id].title+' — ')+'База знаний УОиИ';
   window.scrollTo(0,0);
 }
